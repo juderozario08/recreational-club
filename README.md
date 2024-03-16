@@ -63,4 +63,9 @@ npx expo start
   ```bash
   git push -u origin branch-name
   ```
+  <li>Also make sure to pull on a regular basis to avoid merge conflicts.</li>
+
+  ```sh
+  git pull origin main
+  ```
 </ul>
