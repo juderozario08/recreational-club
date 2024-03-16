@@ -1,7 +1,7 @@
 <h1>This is a CPS 406 Recreational Club Membership</h1>
 <h2>NOTE: Please make sure to use "git pull origin main" regularly to make sure that you are working with the latest files.</h2>
 
-<h3>Please check the npm website by clicking the <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm">here</a> to see how to install npm on windows and follow the instructions.</h3>
+<h4>Please check the npm website by clicking the <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm">here</a> to see how to install npm on windows and follow the instructions.</h4>
 <p> The following information is applicable to MacOS and Linux </p>
 <ul> <li>Install Homebrew from <a href="https://brew.sh/">this</a> website or copy this code</li>
   
