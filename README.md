@@ -15,7 +15,7 @@
 brew install node
 ```
 
-<p>Once NPM is installed, you can copy the following command. <br>Make sure to change PATH with the path you want.</p>
+<p>Once NPM is installed, you can copy the following command. The following command will create a directory in your $HOME directory.</p>
 
 ```sh
 git clone https://github.com/juderozario08/recreational-club.git
