@@ -4,6 +4,7 @@
 <h3>Please check the npm website by clicking the <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm">here</a> to see how to install npm on windows and follow the instructions.</h3>
 <p> The following information is applicable to MacOS and Linux </p>
 <ul> <li>Install Homebrew from <a href="https://brew.sh/">this</a> website or copy this code</li>
+  
 ```sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
@@ -26,12 +27,15 @@ git clone https://github.com/juderozario08/recreational-club.git
 <h2>Once everything is setup</h2>
   <li>First install Expo on your Android or iOS devices</li>
   <li>Then cd into your project directory. Then run the following command.</li>
+
 ```sh
 npm install
 ```
+
 ```sh
 npx expo install react-native-web react-dom @expo/metro-runtime
 ```
+
 ```sh
 npx expo start
 ```
