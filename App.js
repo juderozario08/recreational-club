@@ -5,6 +5,7 @@ import Login from "./screens/Login";
 import Member from "./screens/member/home";
 import Coach from "./screens/coach/home";
 import Treasurer from "./screens/treasurer/home";
+import 'react-native-gesture-handler';
 
 const Stack = createStackNavigator();
 
