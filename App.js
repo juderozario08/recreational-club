@@ -1,10 +1,10 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "./screens/LoginScreen";
-import MemberHomeScreen from "./screens/MemberHomeScreen";
-import CoachHomeScreen from "./screens/CoachHomeScreen";
-import TreasurerHomeScreen from "./screens/TreasurerHomeScreen";
+import Login from "./screens/Login";
+import Member from "./screens/member/home";
+import Coach from "./screens/coach/home";
+import Treasurer from "./screens/treasurer/home";
 
 const Stack = createStackNavigator();
 
@@ -12,11 +12,11 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Login" component={Login} />
         {/* Define screens or stacks for each role */}
-        <Stack.Screen name="Member" component={MemberHomeScreen} />
-        <Stack.Screen name="Coach" component={CoachHomeScreen} />
-        <Stack.Screen name="Treasurer" component={TreasurerHomeScreen} />
+        <Stack.Screen name="Member" component={Member} />
+        <Stack.Screen name="Coach" component={Coach} />
+        <Stack.Screen name="Treasurer" component={Treasurer} />
       </Stack.Navigator>
     </NavigationContainer>
   );

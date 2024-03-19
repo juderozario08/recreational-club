@@ -9,12 +9,12 @@ const styles = StyleSheet.create({
     },
 });
 
-const TreasurerHomeScreen = ({ navigation }) => {
+const Treasurer = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             {/* Simulate role selection with buttons */}
-            <Text>This is the TreasurerHomeScreen </Text>
+            <Text>This is the Treasurer Home Screen </Text>
         </SafeAreaView>
     );
 };
-export default TreasurerHomeScreen
+export default Treasurer

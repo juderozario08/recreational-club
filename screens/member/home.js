@@ -9,12 +9,12 @@ const styles = StyleSheet.create({
     },
 });
 
-const CoachHomeScreen = ({ navigation }) => {
+const Member = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             {/* Simulate role selection with buttons */}
-            <Text>This is the Coach Home Screen</Text>
+            <Text>This is the Member Home Screen</Text>
         </SafeAreaView>
     );
 };
-export default CoachHomeScreen
+export default Member

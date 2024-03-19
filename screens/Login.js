@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const LoginScreen = ({ navigation }) => {
+const Login = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Simulate role selection with buttons */}
@@ -20,4 +20,4 @@ const LoginScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-export default LoginScreen
+export default Login
