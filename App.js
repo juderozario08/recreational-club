@@ -1,10 +1,10 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from './screens/LoginScreen';
-import MemberHomeScreen from './screens/MemberHomeScreen';
-import CoachHomeScreen from './screens/CoachHomeScreen';
-import TreasurerHomeScreen from './screens/TreasurerHomeScreen';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import LoginScreen from "./screens/LoginScreen";
+import MemberHomeScreen from "./screens/MemberHomeScreen";
+import CoachHomeScreen from "./screens/CoachHomeScreen";
+import TreasurerHomeScreen from "./screens/TreasurerHomeScreen";
 
 const Stack = createStackNavigator();
 
