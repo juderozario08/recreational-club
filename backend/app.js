@@ -1,27 +1,50 @@
 require('dotenv').config();
 const express = require('express');
-const userRouter = require('./routes/userRoutes');
+const cors = require('cors');
+const mongoose = require('mongoose');
+
+// Routes
 const sessionRouter = require('./routes/sessionRoutes');
 const paymentRouter = require('./routes/paymentRoutes');
 const authRoutes = require('./routes/userAuthRoute');
 const signUpRoutes = require('./routes/userSignUpRoute');
-const cors = require('cors');
+const userRouter = require('./routes/userRoutes'); // Ensure this is correctly defined
 
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cors());
+
+// Using routes
 app.use(userRouter);
 app.use(sessionRouter);
 app.use(paymentRouter);
 app.use(authRoutes);
 app.use(signUpRoutes);
 
+const uri = process.env.MONGO_URI;
 
-const mongoose = require('mongoose');
+// Connect to MongoDB using Mongoose
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log('Connected successfully to MongoDB Atlas');
 
-mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Connected to MongoDB...'))
-  .catch(err => console.error('Could not connect to MongoDB...', err));
+  // Start the Express server
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+})
+.catch((error) => {
+  console.error('Could not connect to MongoDB Atlas:', error);
+  process.exit(1); // Exit the process with an error code (1) if we can't connect to MongoDB
+});
 
-app.listen(process.env.PORT, '0.0.0.0', () => console.log(`Server running on port ${process.env.PORT}`));
+// Optional: Handle graceful shutdown
+process.on('SIGINT', async () => {
+  await mongoose.disconnect();
+  console.log('MongoDB connection closed.');
+  process.exit(0);
+});
