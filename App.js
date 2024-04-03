@@ -12,9 +12,8 @@ const Stack = createStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
         <Stack.Screen name="Login" component={LoginScreen} />
-        {/* Define screens or stacks for each role */}
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="memberScreen" component={MemberScreen} />
         <Stack.Screen name="coachScreen" component={CoachScreen} />
