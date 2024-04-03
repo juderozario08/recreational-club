@@ -1,27 +1,10 @@
-import React, {useState} from 'react';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import axios from "axios";
 import uri from "../config/apiConfig";
-
-const Profile = () => {
-    const [userInfo, setUserInfo] = useState({
-        name: '',
-        address: '',
-        phoneNumber: '',
-        email: '',
-        role: 'Treasurer',
-    });
-    const [error, setError] = useState(''); // Add state to track the error message
-    return (
-        <View style={styles.container}>
-            <Text style={styles.heading}>Profile</Text>
-            <Text>Name: {userInfo.name}</Text>
-            <Text>Email: {userInfo.email}</Text>
-            <Text>Role: {userInfo.role}</Text>
-        </View>
-    );
-}
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {userid} from './Login'
 
 // Income Statement Component
 const IncomeStatement = () => {
@@ -98,6 +81,37 @@ const MemberManagement = () => {
 // Drawer Navigator
 const Drawer = createDrawerNavigator();
 const TreasurerScreen = () => {
+
+    const Profile = () => {
+        const [user, setUser] = useState(null)
+        useEffect(() => {
+            const fetchUserData = async () => {
+                try {
+                    const response = await axios.get(`${uri}/users/${userid}`);
+                    setUser(response.data)
+                } catch (error) {
+                    console.error('Error fetching user data:', error.message);
+                    setUser(null);
+                }
+            };
+            fetchUserData().then(res => console.log(res))
+        }, [userid]);
+        return (
+            <>
+                {
+                    user ? (
+                        <View style={styles.container}>
+                            <Text style={styles.heading}>Profile</Text>
+                            <Text>Name: {user.name}</Text>
+                            <Text>Email: {user.email}</Text>
+                            <Text>Address: {user.address}</Text>
+                            <Text>Phone Number: {user.phoneNumber}</Text>
+                        </View>
+                    ): null
+                }
+            </>
+        );
+    }
     return (
         <Drawer.Navigator initialRouteName="Profile" screenOptions={{headerShown: true}}>
             <Drawer.Screen name="Profile" component={Profile}/>
