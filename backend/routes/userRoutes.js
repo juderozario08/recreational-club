@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User.js'); // Adjust the path as necessary
+const jwt = require('jsonwebtoken');
+const auth = require('./userAuthRoute');
 
 // POST route to create a new user
 router.post('/users', async (req, res) => {
@@ -16,7 +18,7 @@ router.post('/users', async (req, res) => {
 // GET route to fetch all users
 router.get('/users', async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.findOne({email});
     res.send(users);
   } catch (error) {
     res.status(500).send();
@@ -74,6 +76,6 @@ router.put('/users/:id', async (req, res) => {
       res.status(400).send(error);
     }
   });
-  
+
 
 module.exports = router;
