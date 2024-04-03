@@ -14,7 +14,6 @@ router.post('/users', async (req, res) => {
     res.status(400).send(error);
   }
 });
-
 // GET route to fetch all users
 router.get('/users', async (req, res) => {
   try {
