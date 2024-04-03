@@ -1,125 +1,135 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, ScrollView } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import axios from "axios";
 import uri from "../config/apiConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {userid} from './Login'
+import { userid } from './Login';
+
+const Drawer = createDrawerNavigator();
 
 // Income Statement Component
 const IncomeStatement = () => {
-    // Sample data for income and expenses
     const [income, setIncome] = useState(0);
     const [expenses, setExpenses] = useState(0);
+
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.heading}>Income Statement</Text>
-            <Text>Revenue: {income}</Text>
-            <Text>Expenses: {expenses}</Text>
-            <Text>Profit: {income - expenses}</Text>
-        </View>
+            <Text style={styles.text}>Revenue: {income}</Text>
+            <Text style={styles.text}>Expenses: {expenses}</Text>
+            <Text style={[styles.text, styles.profit]}>Profit: {income - expenses}</Text>
+        </ScrollView>
     );
 };
 
 // Unpaid Debts Component
 const UnpaidDebts = () => {
-    // Sample data for unpaid debts
-    const [unpaidCoachExpenses, setUnpaidCoachExpenses] = useState(200);
+    const [unpaidCoachExpenses, setUnpaidCoachExpenses] = useState();
     const [unpaidHallExpenses, setUnpaidHallExpenses] = useState(300);
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.heading}>Unpaid Debts</Text>
-            <Text>Unpaid Coach Expenses: {unpaidCoachExpenses}</Text>
-            <Text>Unpaid Hall Expenses: {unpaidHallExpenses}</Text>
-        </View>
+            <Text style={styles.text}>Unpaid Coach Expenses: {unpaidCoachExpenses}</Text>
+            <Text style={styles.text}>Unpaid Hall Expenses: {unpaidHallExpenses}</Text>
+        </ScrollView>
     );
 };
 
 // Account Payables Component
 const AccountPayables = () => {
-    // Sample data for account payables
     const [accountPayables, setAccountPayables] = useState(400);
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.heading}>Account Payables</Text>
-            <Text>Current Month's Account Payables: {accountPayables}</Text>
-        </View>
+            <Text style={styles.text}>Current Month's Account Payables: {accountPayables}</Text>
+        </ScrollView>
     );
 };
 
 // Coach Management Component
 const CoachManagement = () => {
-    // Sample data for coach list
-    const [coachList, setCoachList] = useState(['Coach 1', 'Coach 2', 'Coach 3']);
+    const [coachList, setCoachList] = useState([])
+    useEffect(() => {
+        const fetchCoaches = async () => {
+            try{
+                const response = await axios.get(`${uri}/users`)
+                console.log(response)
+                setCoachList(response.data)
+            }catch(e){
+                console.error('Error fetching coaches: ',e.message)
+            }
+        }
+        fetchCoaches()
+    }, []);
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.heading}>Coach Management</Text>
-            {coachList.map((coach, index) => (
-                <Text key={index}>{coach}</Text>
-            ))}
-        </View>
+            {/*{coachList.map((coach, index) => (*/}
+            {/*    <Text key={index} style={styles.text}>{coach.name}</Text>*/}
+            {/*))}*/}
+        </ScrollView>
     );
 };
 
 // Member Management Component
 const MemberManagement = () => {
-    // Sample data for member list
     const [memberList, setMemberList] = useState(['Member 1', 'Member 2', 'Member 3']);
+
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.heading}>Member Management</Text>
             {memberList.map((member, index) => (
-                <Text key={index}>{member}</Text>
+                <Text key={index} style={styles.text}>{member}</Text>
             ))}
-        </View>
+        </ScrollView>
     );
 };
 
-// Drawer Navigator
-const Drawer = createDrawerNavigator();
-const TreasurerScreen = () => {
+const Profile = () => {
+    const [user, setUser] = useState(null);
 
-    const Profile = () => {
-        const [user, setUser] = useState(null)
-        useEffect(() => {
-            const fetchUserData = async () => {
-                try {
-                    const response = await axios.get(`${uri}/users/${userid}`);
-                    setUser(response.data)
-                } catch (error) {
-                    console.error('Error fetching user data:', error.message);
-                    setUser(null);
-                }
-            };
-            fetchUserData().then(res => console.log(res))
-        }, [userid]);
-        return (
-            <>
-                {
-                    user ? (
-                        <View style={styles.container}>
-                            <Text style={styles.heading}>Profile</Text>
-                            <Text>Name: {user.name}</Text>
-                            <Text>Email: {user.email}</Text>
-                            <Text>Address: {user.address}</Text>
-                            <Text>Phone Number: {user.phoneNumber}</Text>
-                        </View>
-                    ): null
-                }
-            </>
-        );
-    }
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await axios.get(`${uri}/users/${userid}`);
+                setUser(response.data);
+            } catch (error) {
+                console.error('Error fetching user data:', error.message);
+                setUser(null);
+            }
+        };
+        fetchUserData().then(r => console.log('Fetched Treasurer Data'));
+    }, [userid]);
+
     return (
-        <Drawer.Navigator initialRouteName="Profile" screenOptions={{headerShown: true}}>
-            <Drawer.Screen name="Profile" component={Profile}/>
-            <Drawer.Screen name="IncomeStatement" component={IncomeStatement}/>
-            <Drawer.Screen name="UnpaidDebts" component={UnpaidDebts}/>
-            <Drawer.Screen name="AccountPayables" component={AccountPayables}/>
-            <Drawer.Screen name="CoachManagement" component={CoachManagement}/>
-            <Drawer.Screen name="MemberManagement" component={MemberManagement}/>
+        <ScrollView contentContainerStyle={styles.container}>
+            {user ? (
+                <>
+                    <Text style={styles.heading}>Profile</Text>
+                    <Text style={styles.text}>Name: {user.name}</Text>
+                    <Text style={styles.text}>Email: {user.email}</Text>
+                    <Text style={styles.text}>Address: {user.address}</Text>
+                    <Text style={styles.text}>Phone Number: {user.phoneNumber}</Text>
+                </>
+            ) : (
+                <Text style={styles.text}>Loading user data...</Text>
+            )}
+        </ScrollView>
+    );
+};
+
+const TreasurerScreen = () => {
+    return (
+        <Drawer.Navigator initialRouteName="Profile" screenOptions={{ headerShown: true }}>
+            <Drawer.Screen name="Profile" component={Profile} />
+            <Drawer.Screen name="IncomeStatement" component={IncomeStatement} />
+            <Drawer.Screen name="UnpaidDebts" component={UnpaidDebts} />
+            <Drawer.Screen name="AccountPayables" component={AccountPayables} />
+            <Drawer.Screen name="CoachManagement" component={CoachManagement} />
+            <Drawer.Screen name="MemberManagement" component={MemberManagement} />
         </Drawer.Navigator>
     );
 };
@@ -128,19 +138,19 @@ export default TreasurerScreen;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexGrow: 1,
+        padding: 20,
     },
     heading: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    text: {
+        fontSize: 18,
         marginBottom: 10,
     },
-    drawerItem: {
-        padding: 10,
-        backgroundColor: '#eee',
-        marginBottom: 1,
+    profit: {
+        color: 'green',
     },
 });
-
