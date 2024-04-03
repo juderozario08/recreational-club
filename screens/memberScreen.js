@@ -4,6 +4,7 @@ import axios from 'axios';
 
 const MemberScreen = () => {
   const [amount, setAmount] = useState(''); // State to hold the payment amount
+  const [balance, setBalance] = useState(100); // Assuming an initial balance, replace with actual logic to fetch balance
 
   const handlePayment = async () => {
     if (!amount) {
@@ -22,6 +23,9 @@ const MemberScreen = () => {
       console.log(response.data);
       Alert.alert('Payment Successful', `Paid $${amount}`);
 
+      // Update the balance after successful payment
+      setBalance(prevBalance => prevBalance - parseFloat(amount)); // Deduct the paid amount from the balance
+
       // Reset the amount after successful payment
       setAmount('');
     } catch (error) {
@@ -33,6 +37,7 @@ const MemberScreen = () => {
   return (
     <View style={styles.container}>
       <Text>Welcome, Member!</Text>
+      <Text style={styles.balanceText}>Current Balance: ${balance}</Text> {/* Display the current balance */}
       <TextInput
         style={styles.input}
         value={amount}
@@ -54,6 +59,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+  },
+  balanceText: {
+    fontSize: 18,
+    marginVertical: 10, // Add some vertical space around the balance text
   },
   text: {
     fontSize: 24,
