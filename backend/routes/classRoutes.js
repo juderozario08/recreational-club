@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Class = require('./Class'); // Adjust the path to where your Class model is defined
+const Class = require('../models/Class'); // Adjust the path to where your Class model is defined
 
 // Create a new class
 router.post('/classes', async (req, res) => {
