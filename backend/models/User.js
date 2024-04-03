@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   role: { type: String, enum: ['member', 'coach', 'treasurer'], default: 'member' },
+  balance: { type: Number, default: 0 },
 });
 
 //Hash password before saving

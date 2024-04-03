@@ -9,6 +9,7 @@ const paymentRouter = require('./routes/paymentRoutes');
 const authRoutes = require('./routes/userAuthRoute');
 const signUpRoutes = require('./routes/userSignUpRoute');
 const userRouter = require('./routes/userRoutes'); // Ensure this is correctly defined
+const classRouter = require('./routes/classRoutes')
 
 const app = express();
 const port = process.env.PORT || 3000;
