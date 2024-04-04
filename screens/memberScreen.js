@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { View, Button, Alert, Text, ScrollView, StyleSheet } from 'react-native';
-import axios from 'axios';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 const MemberScreen = ({ userId }) => {
   const [classes, setClasses] = useState([]);
@@ -8,10 +15,10 @@ const MemberScreen = ({ userId }) => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await axios.get('/api/classes'); // Fetch all classes
+        const response = await axios.get("/api/classes"); // Fetch all classes
         setClasses(response.data);
       } catch (error) {
-        Alert.alert('Error', 'Failed to fetch classes');
+        Alert.alert("Error", "Failed to fetch classes");
       }
     };
 
@@ -20,16 +27,16 @@ const MemberScreen = ({ userId }) => {
 
   const handlePayment = async (classId) => {
     // Implement payment logic here
-    Alert.alert('Payment', `Paid $10 for Class ID: ${classId}`);
+    Alert.alert("Payment", `Paid $10 for Class ID: ${classId}`);
   };
 
   const handleEnrollment = async (classId) => {
     // Implement enrollment logic here
-    Alert.alert('Enrollment', `Enrolled in Class ID: ${classId}`);
+    Alert.alert("Enrollment", `Enrolled in Class ID: ${classId}`);
   };
 
   const isUserEnrolled = (classItem) => {
-    return classItem.attendees.some(attendee => attendee.user === userId);
+    return classItem.attendees.some((attendee) => attendee.user === userId);
   };
 
   return (
@@ -37,12 +44,20 @@ const MemberScreen = ({ userId }) => {
       <Text>Welcome, Member!</Text>
       {classes.map((classItem) => (
         <View key={classItem._id} style={styles.classBox}>
-          <Text>{classItem.title} - {new Date(classItem.date).toLocaleDateString()}</Text>
+          <Text>
+            {classItem.title} - {new Date(classItem.date).toLocaleDateString()}
+          </Text>
           <Text>Coach: {classItem.coach.name}</Text>
           {isUserEnrolled(classItem) ? (
-            <Button title="Pay $10" onPress={() => handlePayment(classItem._id)} />
+            <Button
+              title="Pay $10"
+              onPress={() => handlePayment(classItem._id)}
+            />
           ) : (
-            <Button title="Enroll" onPress={() => handleEnrollment(classItem._id)} />
+            <Button
+              title="Enroll"
+              onPress={() => handleEnrollment(classItem._id)}
+            />
           )}
         </View>
       ))}
@@ -53,14 +68,14 @@ const MemberScreen = ({ userId }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    alignItems: 'center',
+    alignItems: "center",
     padding: 20,
   },
   classBox: {
     margin: 10,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 5,
   },
   // Additional styles as needed
