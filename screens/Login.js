@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import uri from '../config/apiConfig';
@@ -34,7 +34,6 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert("Login Failed", "Incorrect email or password.");
     }
   };
-
 
   // Dynamic background color based on loginError state
   const backgroundColor = 'white'; // Choose a subtler color for the error state

@@ -17,9 +17,11 @@ router.post('/users', async (req, res) => {
 // GET route to fetch all users
 router.get('/users', async (req, res) => {
   try {
-    const users = await User.findOne({email});
+    const users = await User.find({});
+    console.log(users)
     res.send(users);
   } catch (error) {
+    console.error('Error fetching users', error.message)
     res.status(500).send();
   }
 });
@@ -75,6 +77,5 @@ router.put('/users/:id', async (req, res) => {
       res.status(400).send(error);
     }
   });
-
 
 module.exports = router;
