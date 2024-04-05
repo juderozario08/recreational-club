@@ -22,6 +22,7 @@ app.use(sessionRouter);
 app.use(paymentRouter);
 app.use(authRoutes);
 app.use(signUpRoutes);
+app.use(classRouter);
 
 const uri = process.env.MONGO_URI;
 

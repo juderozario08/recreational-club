@@ -1,58 +1,61 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, FlatList } from 'react-native';
-
-// Dummy data for upcoming classes
-const DUMMY_CLASSES = [
-  { id: '1', title: 'Morning Yoga', date: '2023-10-05T08:00:00Z' },
-  { id: '2', title: 'Advanced Pilates', date: '2023-10-06T09:00:00Z' },
-  // Add more classes as needed
-];
+import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator } from 'react-native';
+import axios from 'axios';
+import uri from '../config/apiConfig'; // Make sure this points to your API's base URL
 
 const CoachIntroScreen = ({ navigation }) => {
   const [upcomingClasses, setUpcomingClasses] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    // Ideally, fetch the actual upcoming classes from the backend
-    setUpcomingClasses(DUMMY_CLASSES);
+    setIsLoading(true);
+    axios.get(`${uri}/classes`)
+      .then(response => {
+        setUpcomingClasses(response.data); // Directly set the fetched classes to state
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Failed to fetch classes:', error);
+        setError('Failed to fetch classes');
+        setIsLoading(false);
+      });
   }, []);
 
   const renderItem = ({ item }) => (
     <View style={styles.classItem}>
       <Text style={styles.classTitle}>{item.title}</Text>
-      <Text>{new Date(item.date).toLocaleString()}</Text>
+      <Text>Date: {new Date(item.date).toLocaleDateString()}</Text>
     </View>
   );
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Welcome, Coach!</Text>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Upcoming Classes</Text>
+      {isLoading ? (
+        <ActivityIndicator size="large" />
+      ) : error ? (
+        <Text style={styles.error}>{error}</Text>
+      ) : (
         <FlatList
           data={upcomingClasses}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(item, index) => item._id ? item._id.toString() : index.toString()}
         />
-      </View>
+      )}
       <View style={styles.buttonContainer}>
-        <View style={styles.button}>
-          <Button
-            title="Manage Classes"
-            onPress={() => navigation.navigate('ManageClassesScreen')}
-          />
-        </View>
-        <View style={styles.button}>
-          <Button
-            title="Check Attendance"
-            onPress={() => navigation.navigate('AttendanceScreen')}
-          />
-        </View>
-        <View style={styles.button}>
-          <Button
-            title="Notifications"
-            onPress={() => navigation.navigate('NotificationScreen')} // Replace with your actual navigation destination
-          />
-        </View>
+        <Button
+          title="Manage Classes"
+          onPress={() => navigation.navigate('manageClassesCoach')}
+        />
+        <Button
+          title="Check Attendance"
+          onPress={() => navigation.navigate('AttendanceScreen')}
+        />
+        <Button
+          title="Notifications"
+          onPress={() => navigation.navigate('NotificationScreen')}
+        />
       </View>
     </View>
   );
@@ -68,14 +71,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  section: {
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
   classItem: {
     backgroundColor: '#f9f9f9',
     padding: 10,
@@ -87,12 +82,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonContainer: {
-    marginTop: 10,
+    marginTop: 20,
   },
-  button: {
-    marginBottom: 10, // This adds space between the buttons
+  error: {
+    color: 'red',
   },
 });
 
 export default CoachIntroScreen;
-
