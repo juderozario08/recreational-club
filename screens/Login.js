@@ -1,11 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import uri from '../config/apiConfig';
 import { jwtDecode } from "jwt-decode";
-
 import { useFocusEffect } from '@react-navigation/native';
 
+
+let userid = ''
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,14 +20,23 @@ const LoginScreen = ({ navigation }) => {
     }, [])
   );
 
+  const storeUserId = async (userId) => {
+    try {
+      await AsyncStorage.setItem('userId', userId);
+    } catch (error) {
+      console.error('Error storing the user ID:', error);
+    }
+  };
+
   const handleLogin = async () => {
     try {
       const response = await axios.post(`${uri}/login`, { email, password });
       const { token } = response.data;
-
-      const decoded = jwtDecode(token);
-      const userRole = decoded.role;
-
+      // const decoded = jwtDecode(token);
+      // userid = decoded.userId
+      // const userRole = decoded.role;
+      const userId = decoded.userId;
+      await storeUserId(userId);
       navigation.navigate(userRole + 'Screen');
 
     } catch (error) {
@@ -34,8 +45,7 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert("Login Failed", "Incorrect email or password.");
     }
   };
-
-
+  
   // Dynamic background color based on loginError state
   const backgroundColor = 'white'; // Choose a subtler color for the error state
 
@@ -109,5 +119,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
+export {userid}
 export default LoginScreen;

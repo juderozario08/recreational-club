@@ -14,16 +14,37 @@ router.post('/users', async (req, res) => {
     res.status(400).send(error);
   }
 });
-
 // GET route to fetch all users
 router.get('/users', async (req, res) => {
   try {
-    const users = await User.findOne({email});
+    const users = await User.find({});
     res.send(users);
   } catch (error) {
+    console.error('Error fetching users', error.message)
     res.status(500).send();
   }
 });
+// GET route to fetch all coaches 
+router.get('/users/coaches', async (req, res) => {
+  try {
+    const users = await User.find({role: 'coach'});
+    res.send(users);
+  } catch (error) {
+    console.error('Error fetching users', error.message)
+    res.status(500).send();
+  }
+});
+// GET route to fetch all members 
+router.get('/users/members', async (req, res) => {
+  try {
+    const users = await User.find({role: 'member'});
+    res.send(users);
+  } catch (error) {
+    console.error('Error fetching users', error.message)
+    res.status(500).send();
+  }
+});
+
 
 // GET route to fetch a single user by id
 router.get('/users/:id', async (req, res) => {
@@ -76,6 +97,5 @@ router.put('/users/:id', async (req, res) => {
       res.status(400).send(error);
     }
   });
-
 
 module.exports = router;
