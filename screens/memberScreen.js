@@ -1,81 +1,84 @@
-import React, { useState } from 'react';
-import { View, Button, Alert, Text, TextInput, StyleSheet } from 'react-native';
-import axios from 'axios';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
-const MemberScreen = () => {
-  const [amount, setAmount] = useState(''); // State to hold the payment amount
-  const [balance, setBalance] = useState(100); // Assuming an initial balance, replace with actual logic to fetch balance
+const MemberScreen = ({ userId }) => {
+  const [classes, setClasses] = useState([]);
 
-  const handlePayment = async () => {
-    if (!amount) {
-      Alert.alert('Error', 'Please enter an amount');
-      return;
-    }
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await axios.get("/api/classes"); // Fetch all classes
+        setClasses(response.data);
+      } catch (error) {
+        Alert.alert("Error", "Failed to fetch classes");
+      }
+    };
 
-    try {
-      // Replace 'your_payment_api_endpoint' with your actual payment API endpoint
-      const response = await axios.post('your_payment_api_endpoint', {
-        amount: amount, // Send the amount to your backend
-        // Add other necessary data here, e.g., user ID, payment method, etc.
-      });
+    fetchClasses();
+  }, []);
 
-      // Handle the response from your backend
-      console.log(response.data);
-      Alert.alert('Payment Successful', `Paid $${amount}`);
+  const handlePayment = async (classId) => {
+    // Implement payment logic here
+    Alert.alert("Payment", `Paid $10 for Class ID: ${classId}`);
+  };
 
-      // Update the balance after successful payment
-      setBalance(prevBalance => prevBalance - parseFloat(amount)); // Deduct the paid amount from the balance
+  const handleEnrollment = async (classId) => {
+    // Implement enrollment logic here
+    Alert.alert("Enrollment", `Enrolled in Class ID: ${classId}`);
+  };
 
-      // Reset the amount after successful payment
-      setAmount('');
-    } catch (error) {
-      console.error(error);
-      Alert.alert('Payment Failed', 'Something went wrong with your payment. Please try again.');
-    }
+  const isUserEnrolled = (classItem) => {
+    return classItem.attendees.some((attendee) => attendee.user === userId);
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text>Welcome, Member!</Text>
-      <Text style={styles.balanceText}>Current Balance: ${balance}</Text> {/* Display the current balance */}
-      <TextInput
-        style={styles.input}
-        value={amount}
-        onChangeText={setAmount} // Update the amount state when text changes
-        placeholder="Enter payment amount"
-        keyboardType="numeric" // Ensures that the keyboard is suitable for entering numbers
-      />
-      <Button
-        title="Make Payment"
-        onPress={handlePayment} // Call the handlePayment function when the button is pressed
-      />
-    </View>
+      {classes.map((classItem) => (
+        <View key={classItem._id} style={styles.classBox}>
+          <Text>
+            {classItem.title} - {new Date(classItem.date).toLocaleDateString()}
+          </Text>
+          <Text>Coach: {classItem.coach.name}</Text>
+          {isUserEnrolled(classItem) ? (
+            <Button
+              title="Pay $10"
+              onPress={() => handlePayment(classItem._id)}
+            />
+          ) : (
+            <Button
+              title="Enroll"
+              onPress={() => handleEnrollment(classItem._id)}
+            />
+          )}
+        </View>
+      ))}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexGrow: 1,
+    alignItems: "center",
     padding: 20,
   },
-  balanceText: {
-    fontSize: 18,
-    marginVertical: 10, // Add some vertical space around the balance text
-  },
-  text: {
-    fontSize: 24,
-    marginBottom: 20, // Add some space between the text and the input field
-  },
-  input: {
-    width: '100%', // Make the input stretch to the container width
-    height: 40,
-    marginVertical: 8, // Add some vertical margin for spacing
+  classBox: {
+    margin: 10,
+    padding: 10,
     borderWidth: 1,
-    padding: 10, // Padding inside the input for text
-    borderRadius: 4, // Slightly round the corners of the input field
+    borderColor: "#ddd",
+    borderRadius: 5,
   },
+  // Additional styles as needed
 });
 
 export default MemberScreen;
