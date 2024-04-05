@@ -1,11 +1,12 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
-import LoginScreen from "./screens/Login";
-import SignUpScreen from "./screens/Signup";
-import CoachScreen from "./screens/coachScreen";
-import MemberScreen from "./screens/memberScreen";
-import TreasurerScreen from "./screens/treasurerScreen";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from './screens/Login';
+import SignUpScreen from './screens/Signup';
+import MemberScreen from './screens/memberScreen';
+import CoachScreen from './screens/coachScreen';
+import TreasurerScreen from './screens/treasurerScreen';
+import ManageClassScreen from './screens/manageClassesScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ function App() {
         <Stack.Screen name="memberScreen" component={MemberScreen} />
         <Stack.Screen name="coachScreen" component={CoachScreen} />
         <Stack.Screen name="treasurerScreen" component={TreasurerScreen} />
+        <Stack.Screen name="manageClassesCoach" component={ManageClassScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
