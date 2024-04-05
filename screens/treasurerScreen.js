@@ -64,7 +64,6 @@ const CoachManagement = () => {
       try {
         const response = await axios.get(`${uri}/users/coaches`);
         console.log(response);
-        setCoachList(response.data);
       } catch (e) {
         console.error("Error fetching coaches: ", e.message);
       }
@@ -91,7 +90,6 @@ const MemberManagement = () => {
     const fetchMembers = async () => {
       try {
         const response = await axios.get(`${uri}/users/members`);
-        console.log(response);
         setMemberList(response.data);
       } catch (e) {
         console.error("Error fetching coaches: ", e.message);
