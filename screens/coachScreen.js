@@ -50,7 +50,7 @@ const CoachIntroScreen = ({ navigation }) => {
         />
         <Button
           title="Check Attendance"
-          onPress={() => navigation.navigate('AttendanceScreen')}
+          onPress={() => navigation.navigate('attendanceScreen')}
         />
         <Button
           title="Notifications"

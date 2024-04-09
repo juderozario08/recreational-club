@@ -43,4 +43,18 @@ router.delete('/classes/:id', async (req, res) => {
   }
 });
 
+// Add a user to a class
+router.post('/classes/:id/users', async (req, res) => {
+  try {
+    const updatedClass = await Class.findByIdAndUpdate(
+      req.params.id,
+      { $push: { attendees: { user: req.body.userId, hasPaid: false, attended: false } } },
+      { new: true }
+    );
+    res.json(updatedClass);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;
