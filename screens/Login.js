@@ -32,9 +32,9 @@ const LoginScreen = ({ navigation }) => {
     try {
       const response = await axios.post(`${uri}/login`, { email, password });
       const { token } = response.data;
-      // const decoded = jwtDecode(token);
-      // userid = decoded.userId
-      // const userRole = decoded.role;
+      const decoded = jwtDecode(token);
+      userid = decoded.userId
+      const userRole = decoded.role;
       const userId = decoded.userId;
       await storeUserId(userId);
       navigation.navigate(userRole + 'Screen');
