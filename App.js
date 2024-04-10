@@ -7,6 +7,7 @@ import MemberScreen from './screens/memberScreen';
 import CoachScreen from './screens/coachScreen';
 import TreasurerScreen from './screens/treasurerScreen';
 import ManageClassScreen from './screens/manageClassesScreen';
+import ManageEnrollScreen from './screens/manageEnrollScreen';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ function App() {
         <Stack.Screen name="coachScreen" component={CoachScreen} />
         <Stack.Screen name="treasurerScreen" component={TreasurerScreen} />
         <Stack.Screen name="manageClassesCoach" component={ManageClassScreen} />
+        <Stack.Screen name="manageClassesMember" component={ManageEnrollScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
