@@ -1,16 +1,15 @@
-import React, {useState, useCallback, useEffect} from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import uri from '../config/apiConfig';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useState } from "react";
+import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import uri from "../config/apiConfig";
 
-
-let userid = ''
+let userid = "";
 const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
 
   // Reset loginError when the screen is focused
@@ -22,9 +21,9 @@ const LoginScreen = ({ navigation }) => {
 
   const storeUserId = async (userId) => {
     try {
-      await AsyncStorage.setItem('userId', userId);
+      await AsyncStorage.setItem("userId", userId);
     } catch (error) {
-      console.error('Error storing the user ID:', error);
+      console.error("Error storing the user ID:", error);
     }
   };
 
@@ -45,14 +44,16 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert("Login Failed", "Incorrect email or password.");
     }
   };
-  
+
   // Dynamic background color based on loginError state
-  const backgroundColor = 'white'; // Choose a subtler color for the error state
+  const backgroundColor = "white"; // Choose a subtler color for the error state
 
   return (
-    <View style={[styles.container, {backgroundColor}]}> 
+    <View style={[styles.container, { backgroundColor }]}>
       <Text style={styles.header}>Recreation Club</Text>
-      {loginError && <Text style={styles.errorText}>Incorrect email or password.</Text>}
+      {loginError && (
+        <Text style={styles.errorText}>Incorrect email or password.</Text>
+      )}
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -69,15 +70,16 @@ const LoginScreen = ({ navigation }) => {
         secureTextEntry
       />
       <View style={styles.buttonContainer}>
-        <Button 
-          title="Login" 
+        <Button
+          title="Login"
           onPress={handleLogin}
-          color={loginError ? 'red' : '#007AFF'} // Button color changes based on loginError
+          color={loginError ? "red" : "#007AFF"} // Button color changes based on loginError
         />
       </View>
-      <Text 
+      <Text
         style={styles.registerText}
-        onPress={() => navigation.navigate('SignUp')}>
+        onPress={() => navigation.navigate("SignUp")}
+      >
         Don't have an account? Sign up
       </Text>
     </View>
@@ -87,19 +89,19 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 20,
     // Removed background color here to apply it dynamically in the component
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 40,
-    textAlign: 'center',
+    textAlign: "center",
   },
   input: {
     height: 50,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 20,
     padding: 10,
@@ -109,15 +111,14 @@ const styles = StyleSheet.create({
     marginBottom: 20, // Add space below the button
   },
   errorText: {
-    color: 'red',
+    color: "red",
     marginBottom: 20, // Add some space between the error text and the inputs
-    textAlign: 'center',
+    textAlign: "center",
   },
   registerText: {
     marginTop: 20,
-    color: 'blue',
-    textAlign: 'center',
+    color: "blue",
+    textAlign: "center",
   },
 });
-export {userid}
 export default LoginScreen;

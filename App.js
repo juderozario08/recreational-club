@@ -27,7 +27,7 @@ function App() {
         <Stack.Screen name="addUserClassScreen" component={AddUserClassScreen} />
         <Stack.Screen name="attendanceScreen" component={AttendanceScreen} />
         <Stack.Screen name="enrolScreen" component={EnrolScreen} />
-        <Stack.Screen name="treasurerScreen" component={TreasurerScreen} />
+        <Stack.Screen name="TreasurerScreen" component={TreasurerScreen} />
         <Stack.Screen name="manageClassesCoach" component={ManageClassScreen} />
       </Stack.Navigator>
     </NavigationContainer>
