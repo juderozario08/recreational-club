@@ -31,9 +31,7 @@ const LoginScreen = ({ navigation }) => {
     try {
       const response = await axios.post(`${uri}/login`, { email, password });
       const { token } = response.data;
-
       
-
       const decoded = jwtDecode(token);
       const userRole = decoded.role;
       const userId = decoded.userId;
@@ -43,7 +41,7 @@ const LoginScreen = ({ navigation }) => {
       if (userRole === 'member') {
         navigation.navigate('enrolScreen');
       } else if (userRole === 'coach') {
-        navigation.navigate('CoachScreen');
+        navigation.navigate('coachScreen');
       } else {
         console.error('Invalid user role:', userRole);
         Alert.alert('Login Failed', 'Invalid user role');

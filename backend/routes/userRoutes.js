@@ -18,10 +18,11 @@ router.post('/users', async (req, res) => {
 // GET route to fetch all users
 router.get('/users', async (req, res) => {
   try {
-    const users = await User.findOne({email});
-    res.send(users);
+    const users = await User.find(); // This fetches all users from the database
+    res.json(users);
   } catch (error) {
-    res.status(500).send();
+    console.error("Failed to fetch users:", error);
+    res.status(500).json({ message: "Failed to fetch users" });
   }
 });
 
