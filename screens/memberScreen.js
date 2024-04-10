@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import uri from '../config/apiConfig'; // Make sure this points to your API's base URL
-import { userid } from "./Login";
 
 const MemberIntroScreen = ({ navigation }) => {
   const [upcomingClasses, setUpcomingClasses] = useState([]);
@@ -11,7 +10,7 @@ const MemberIntroScreen = ({ navigation }) => {
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get(`${uri}/classes/member/${userid}`)
+    axios.get(`${uri}/classes`)
       .then(response => {
         setUpcomingClasses(response.data); // Directly set the fetched classes to state
         setIsLoading(false);

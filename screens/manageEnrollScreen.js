@@ -2,24 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Button, FlatList, Modal, TextInput, ScrollView, StyleSheet } from 'react-native';
 import * as ClassService from '../services/classService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import uri from '../config/apiConfig';
+import axios from 'axios';
+
 
 const ManageClassesScreen = () => {
   const [classes, setClasses] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentClass, setCurrentClass] = useState({ title: '', date: '' });
   const [isEditing, setIsEditing] = useState(false);
   const [editingClassId, setEditingClassId] = useState(null);
 
   useEffect(() => {
-    const loadClasses = async () => {
-      try {
-        const response = await ClassService.fetchClasses();
-        setClasses(response);
-      } catch (error) {
+    setIsLoading(true);
+    axios.get(`${uri}/classes`)
+      .then(response => {
+        setClasses(response.data); // Directly set the fetched classes to state
+        setIsLoading(false);
+      })
+      .catch(error => {
         console.error('Failed to fetch classes:', error);
-      }
-    };
-    loadClasses();
+        setError('Failed to fetch classes');
+        setIsLoading(false);
+      });
   }, []);
 
   
@@ -29,20 +35,32 @@ const ManageClassesScreen = () => {
       console.error("User ID not found.");
       return;
     }
+    
 
-    const classData = { ...currentClass, coach: userId };
-    try {
-      if (isEditing) {
-        await ClassService.updateClass(editingClassId, classData);
-      } else {
-        await ClassService.createClass(classData);
-      }
-      resetModal();
-      loadClasses();
-    } catch (error) {
-      console.error('Error processing class:', error);
+    // If the class exists, enroll the current user
+    if (existingClass) {
+      enrollUserInClass(existingClass, userId);
+    } else {
+      // If the class does not exist, create the class
+      createClass();
     }
-  };
+    try {
+      const response = await axios.post(`${uri}/classes/${existingClass.id}/users`, {
+        userId: userId, // Replace with the actual current user's ID
+      });
+
+      if (response.status === 200) {
+        alert('Successfully enrolled in class');
+      } else {
+        alert('Failed to enroll in class');
+      }
+    } catch (error) {
+      console.error('Failed to enroll in class1:', error);
+      alert('Failed to enroll in class2');
+    }
+
+  resetModal();
+};
 
   const handleDelete = async (id) => {
     try {
@@ -100,8 +118,8 @@ const ManageClassesScreen = () => {
             <Text>{item.title}</Text>
             <Text>Date: {item.date}</Text>
             <View style={styles.buttons}>
-              <Button title="Edit" onPress={() => openEditModal(item)} />
-              <Button title="Delete" onPress={() => handleDelete(item.id)} color="#ff0000" />
+              <Button title="" onPress={() => openEditModal(item)} />
+              <Button title="" onPress={() => handleDelete(item.id)} color="#ff0000" />
             </View>
           </View>
         )}
