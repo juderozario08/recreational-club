@@ -32,7 +32,6 @@ const LoginScreen = ({ navigation }) => {
       const response = await axios.post(`${uri}/login`, { email, password });
       const { token } = response.data;
       const decoded = jwtDecode(token);
-      userid = decoded.userId;
       const userRole = decoded.role;
       const userId = decoded.userId;
       await storeUserId(userId);
@@ -120,5 +119,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-export { userid };
 export default LoginScreen;

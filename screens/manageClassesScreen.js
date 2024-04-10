@@ -1,12 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Button, FlatList, Modal, TextInput, ScrollView, StyleSheet } from 'react-native';
-import * as ClassService from '../services/classService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  FlatList,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import * as ClassService from "../services/classService";
 
 const ManageClassesScreen = () => {
   const [classes, setClasses] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentClass, setCurrentClass] = useState({ title: '', date: '' });
+  const [currentClass, setCurrentClass] = useState({ title: "", date: "" });
   const [isEditing, setIsEditing] = useState(false);
   const [editingClassId, setEditingClassId] = useState(null);
 
@@ -16,14 +25,14 @@ const ManageClassesScreen = () => {
         const response = await ClassService.fetchClasses();
         setClasses(response);
       } catch (error) {
-        console.error('Failed to fetch classes:', error);
+        console.error("Failed to fetch classes:", error);
       }
     };
     loadClasses();
   }, []);
 
   const handleCreateOrUpdate = async () => {
-    const userId = await AsyncStorage.getItem('userId');
+    const userId = await AsyncStorage.getItem("userId");
     if (!userId) {
       console.error("User ID not found.");
       return;
@@ -39,7 +48,7 @@ const ManageClassesScreen = () => {
       resetModal();
       loadClasses();
     } catch (error) {
-      console.error('Error processing class:', error);
+      console.error("Error processing class:", error);
     }
   };
 
@@ -48,13 +57,13 @@ const ManageClassesScreen = () => {
       await ClassService.deleteClass(id);
       loadClasses();
     } catch (error) {
-      console.error('Failed to delete class:', error);
+      console.error("Failed to delete class:", error);
     }
   };
 
   const resetModal = () => {
     setIsModalOpen(false);
-    setCurrentClass({ title: '', date: '' });
+    setCurrentClass({ title: "", date: "" });
     setIsEditing(false);
     setEditingClassId(null);
   };
@@ -70,13 +79,17 @@ const ManageClassesScreen = () => {
     <ScrollView style={styles.modalView}>
       <TextInput
         style={styles.input}
-        onChangeText={(text) => setCurrentClass(prevState => ({ ...prevState, title: text }))}
+        onChangeText={(text) =>
+          setCurrentClass((prevState) => ({ ...prevState, title: text }))
+        }
         value={currentClass.title}
         placeholder="Class Title"
       />
       <TextInput
         style={styles.input}
-        onChangeText={(text) => setCurrentClass(prevState => ({ ...prevState, date: text }))}
+        onChangeText={(text) =>
+          setCurrentClass((prevState) => ({ ...prevState, date: text }))
+        }
         value={currentClass.date}
         placeholder="Class Date (YYYY-MM-DD)"
       />
@@ -93,14 +106,20 @@ const ManageClassesScreen = () => {
       <Button title="Add New Class" onPress={() => setIsModalOpen(true)} />
       <FlatList
         data={classes}
-        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
+        keyExtractor={(item, index) =>
+          item.id ? item.id.toString() : index.toString()
+        }
         renderItem={({ item }) => (
           <View style={styles.classItem}>
             <Text>{item.title}</Text>
             <Text>Date: {item.date}</Text>
             <View style={styles.buttons}>
               <Button title="Edit" onPress={() => openEditModal(item)} />
-              <Button title="Delete" onPress={() => handleDelete(item.id)} color="#ff0000" />
+              <Button
+                title="Delete"
+                onPress={() => handleDelete(item.id)}
+                color="#ff0000"
+              />
             </View>
           </View>
         )}
@@ -118,14 +137,14 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   classItem: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
     padding: 20,
     marginBottom: 10,
     borderRadius: 5,
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
@@ -134,12 +153,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 10,
   },
 });
 
 export default ManageClassesScreen;
-
-
