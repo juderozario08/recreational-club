@@ -37,13 +37,15 @@ const LoginScreen = ({ navigation }) => {
       await storeUserId(userId);
 
       //navigation.navigate(userRole + 'Screen');
-      if (userRole === 'member') {
-        navigation.navigate('enrolScreen');
-      } else if (userRole === 'coach') {
-        navigation.navigate('CoachScreen');
+      if (userRole === "member") {
+        navigation.navigate("enrolScreen");
+      } else if (userRole === "coach") {
+        navigation.navigate("CoachScreen");
+      } else if (userRole === "treasurer") {
+        navigation.navigate("TreasurerScreen");
       } else {
-        console.error('Invalid user role:', userRole);
-        Alert.alert('Login Failed', 'Invalid user role');
+        console.error("Invalid user role:", userRole);
+        Alert.alert("Login Failed", "Invalid user role");
       }
     } catch (error) {
       console.log(error);

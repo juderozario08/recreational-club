@@ -1,16 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import uri from "../config/apiConfig";
 
 const Drawer = createDrawerNavigator();
 
-let classes = [];
 const TreasurerScreen = () => {
-  const [coachList, setCoachList] = useState([]);
+  const coachList = useRef([]);
   const [memberList, setMemberList] = useState([]);
+  const classes = useRef([]);
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -37,31 +37,31 @@ const TreasurerScreen = () => {
     };
     fetchUserData();
   }, []);
+  const fetchCoaches = async () => {
+    try {
+      const response = await axios.get(`${uri}/users/coaches`);
+      coachList.current = response.data;
+      console.log("Coaches Loaded");
+    } catch (e) {
+      console.error("Error fetching coaches: ", e.message);
+    }
+  };
+  const fetchClasses = async () => {
+    try {
+      const response = await axios.get(`${uri}/classes`);
+      for (let i = 0; i < response.data.length; i++) {
+        classes.current.push(response.data[i]);
+        setIncome(income + response.data[i].cost);
+      }
+      console.log("Classes Loaded");
+    } catch (e) {
+      console.error("Error fetching classes: ", e.message);
+    }
+  };
   useEffect(() => {
-    const fetchCoaches = async () => {
-      try {
-        const response = await axios.get(`${uri}/users/coaches`);
-        setCoachList(response.data);
-        console.log("Coaches Loaded");
-      } catch (e) {
-        console.error("Error fetching coaches: ", e.message);
-      }
-    };
-    const fetchClasses = async () => {
-      try {
-        const response = await axios.get(`${uri}/classes`);
-        for (let i = 0; i < response.data.length; i++) {
-          classes.push(response.data[i]);
-          setIncome(income + response.data[i].cost);
-        }
-        console.log("Classes Loaded");
-      } catch (e) {
-        console.error("Error fetching classes: ", e.message);
-      }
-    };
     fetchCoaches();
     fetchClasses();
-  }, []);
+  }, [coachList, classes]);
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -120,7 +120,7 @@ const TreasurerScreen = () => {
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.heading}>Coach Management</Text>
-        {coachList.map((coach, index) => {
+        {coachList.current.map((coach, index) => {
           return (
             <View key={index} style={styles.coachContainer}>
               <Pressable onPress={() => handleCoachPress(coach)}>
@@ -135,7 +135,7 @@ const TreasurerScreen = () => {
                   justifyContent: "center",
                 }}
               >
-                {classes.map((cls, idx) => {
+                {classes.current.map((cls, idx) => {
                   if (cls.coach._id === coach._id) {
                     return (
                       <View key={idx} style={styles.classContainer}>
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   profileView: {
-    width: "90%",
+    width: "80%",
     marginVertical: 10,
     alignItems: "center",
     justifyContent: "center",
@@ -263,10 +263,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingVertical: 10,
     marginBottom: 10,
-    marginHorizontal: 5,
+    marginHorizontal: 10,
     backgroundColor: "#f0f0f0",
     borderRadius: 8,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
