@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import uri from '../config/apiConfig'; // Make sure this points to your API's base URL
 
@@ -44,18 +44,16 @@ const CoachIntroScreen = ({ navigation }) => {
         />
       )}
       <View style={styles.buttonContainer}>
-        <Button
-          title="Manage Classes"
-          onPress={() => navigation.navigate('manageClassesCoach')}
-        />
-        <Button
-          title="Check Attendance"
-          onPress={() => navigation.navigate('attendanceScreen')}
-        />
-        <Button
-          title="Notifications"
-          onPress={() => navigation.navigate('NotificationScreen')}
-        />
+        {/* Use TouchableOpacity for custom button styling */}
+        <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('manageClassesCoach')}>
+          <Text style={styles.buttonText}>Create/Edit Classes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('attendanceScreen')}>
+          <Text style={styles.buttonText}>Check Attendance</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('addUserClassScreen')}>
+          <Text style={styles.buttonText}>Add Users To Class</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -83,6 +81,19 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
+  },
+  buttonStyle: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white', // Example text color
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   error: {
     color: 'red',
