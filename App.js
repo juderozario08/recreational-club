@@ -7,6 +7,7 @@ import MemberScreen from './screens/memberScreen';
 import CoachScreen from './screens/coachScreen';
 import TreasurerScreen from './screens/treasurerScreen';
 import ManageClassScreen from './screens/manageClassesScreen';
+import ManageEnrollScreen from './screens/manageEnrollScreen';
 import AttendanceScreen from './screens/attendanceScreen';
 import EnrolScreen from './screens/addClassScreen';
 import AddUserClassScreen from './screens/addUserstoClassScreen';
@@ -29,6 +30,7 @@ function App() {
         <Stack.Screen name="enrolScreen" component={EnrolScreen} />
         <Stack.Screen name="TreasurerScreen" component={TreasurerScreen} />
         <Stack.Screen name="manageClassesCoach" component={ManageClassScreen} />
+        <Stack.Screen name="manageClassesMember" component={ManageEnrollScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
