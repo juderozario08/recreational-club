@@ -1,12 +1,15 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
-import LoginScreen from "./screens/Login";
-import SignUpScreen from "./screens/Signup";
-import CoachScreen from "./screens/coachScreen";
-import ManageClassScreen from "./screens/manageClassesScreen";
-import MemberScreen from "./screens/memberScreen";
-import TreasurerScreen from "./screens/treasurerScreen";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from './screens/Login';
+import SignUpScreen from './screens/Signup';
+import MemberScreen from './screens/memberScreen';
+import CoachScreen from './screens/coachScreen';
+import TreasurerScreen from './screens/treasurerScreen';
+import ManageClassScreen from './screens/manageClassesScreen';
+import AttendanceScreen from './screens/attendanceScreen';
+import EnrolScreen from './screens/addClassScreen';
+
 
 const Stack = createStackNavigator();
 
@@ -21,6 +24,8 @@ function App() {
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="memberScreen" component={MemberScreen} />
         <Stack.Screen name="coachScreen" component={CoachScreen} />
+        <Stack.Screen name="attendanceScreen" component={AttendanceScreen} />
+        <Stack.Screen name="enrolScreen" component={EnrolScreen} />
         <Stack.Screen name="treasurerScreen" component={TreasurerScreen} />
         <Stack.Screen name="manageClassesCoach" component={ManageClassScreen} />
       </Stack.Navigator>

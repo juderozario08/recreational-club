@@ -35,7 +35,16 @@ const LoginScreen = ({ navigation }) => {
       const userRole = decoded.role;
       const userId = decoded.userId;
       await storeUserId(userId);
-      navigation.navigate(userRole + "Screen");
+
+      //navigation.navigate(userRole + 'Screen');
+      if (userRole === 'member') {
+        navigation.navigate('enrolScreen');
+      } else if (userRole === 'coach') {
+        navigation.navigate('CoachScreen');
+      } else {
+        console.error('Invalid user role:', userRole);
+        Alert.alert('Login Failed', 'Invalid user role');
+      }
     } catch (error) {
       console.log(error);
       setLoginError(true);
