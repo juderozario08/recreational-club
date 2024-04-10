@@ -7,6 +7,7 @@ import uri from '../config/apiConfig'; // Make sure this points to your API's ba
 // Ensure this path is correct and points to your actual service file
 import * as ClassService from '../services/classService';
 
+
 const ManageClassesScreen = ({ navigation }) => {
   const [classes, setClasses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,9 +25,11 @@ const ManageClassesScreen = ({ navigation }) => {
         setClasses(response.data);
         setIsLoading(false);
       } catch (error) {
+
         console.error('Failed to fetch classes:', error);
         setError('Failed to fetch classes');
         setIsLoading(false);
+
       }
     };
 
@@ -89,11 +92,43 @@ const ManageClassesScreen = ({ navigation }) => {
     setModalVisible(false);
   };
 
+
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => openEditModal(item)} style={styles.classItem}>
       <Text style={styles.classTitle}>{item.title}</Text>
       <Text>Date: {new Date(item.date).toLocaleDateString()}</Text>
     </TouchableOpacity>
+  const openEditModal = (item) => {
+    setCurrentClass({ title: item.title, date: item.date });
+    setIsEditing(true);
+    setEditingClassId(item.id);
+    setIsModalOpen(true);
+  };
+
+  const renderModalContent = () => (
+    <ScrollView style={styles.modalView}>
+      <TextInput
+        style={styles.input}
+        onChangeText={(text) =>
+          setCurrentClass((prevState) => ({ ...prevState, title: text }))
+        }
+        value={currentClass.title}
+        placeholder="Class Title"
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={(text) =>
+          setCurrentClass((prevState) => ({ ...prevState, date: text }))
+        }
+        value={currentClass.date}
+        placeholder="Class Date (YYYY-MM-DD)"
+      />
+      <Button
+        title={isEditing ? "Update Class" : "Add Class"}
+        onPress={handleCreateOrUpdate}
+      />
+      <Button title="Cancel" onPress={resetModal} />
+    </ScrollView>
   );
 
   return (
@@ -159,7 +194,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   classItem: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
     padding: 20,
     marginBottom: 10,
     borderRadius: 5,
@@ -192,7 +227,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 20,
     width: 250, // Specify width to ensure consistency
