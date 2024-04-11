@@ -1,31 +1,73 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react'; // Import useCallback
+import { View, Text, StyleSheet, ActivityIndicator, FlatList, Button, Alert } from 'react-native';
 import axios from 'axios';
-import uri from '../config/apiConfig'; // Make sure this points to your API's base URL
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
+import uri from '../config/apiConfig';
 
-const MemberIntroScreen = ({ navigation }) => {
-  const [upcomingClasses, setUpcomingClasses] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+const ClassesScreen = ({ navigation }) => {
+  const [classes, setClasses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useState('');
 
-  useEffect(() => {
+  // Define the function to fetch classes outside of useEffect to be used with useFocusEffect
+  const fetchClassesAndUserId = useCallback(async () => {
     setIsLoading(true);
-    axios.get(`${uri}/classes`)
-      .then(response => {
-        setUpcomingClasses(response.data); // Directly set the fetched classes to state
-        setIsLoading(false);
-      })
-      .catch(error => {
-        console.error('Failed to fetch classes:', error);
-        setError('Failed to fetch classes');
-        setIsLoading(false);
-      });
+    try {
+      const storedUserId = await AsyncStorage.getItem('userId');
+      setUserId(storedUserId);
+      const response = await axios.get(`${uri}/user-classes/${storedUserId}`);
+      const classesWithPaymentStatus = response.data.map(classItem => ({
+        ...classItem,
+        hasPaid: classItem.attendees.some(attendee => attendee.user === storedUserId && attendee.hasPaid),
+      }));
+      setClasses(classesWithPaymentStatus);
+    } catch (error) {
+      console.error('Failed to fetch classes:', error);
+      Alert.alert("Error", "Failed to fetch classes. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  const renderItem = ({ item }) => (
+  useEffect(() => {
+    fetchClassesAndUserId();
+  }, [fetchClassesAndUserId]);
+
+  // Use useFocusEffect to refresh classes every time the screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      fetchClassesAndUserId();
+    }, [fetchClassesAndUserId])
+  );
+
+  const handlePayment = async (classId) => {
+    try {
+      // Simulate payment process
+      console.log(`Paying for class: ${classId}`);
+      // After payment, update the local state to reflect the payment status
+      const updatedClasses = classes.map(classItem => {
+        if (classItem._id === classId) {
+          return { ...classItem, hasPaid: true }; // Update hasPaid status to true
+        }
+        return classItem;
+      });
+      setClasses(updatedClasses);
+      // You should also send a request to your backend to update the payment status
+    } catch (error) {
+      console.error('Payment failed:', error);
+    }
+  };
+
+  const renderClass = ({ item }) => (
     <View style={styles.classItem}>
       <Text style={styles.classTitle}>{item.title}</Text>
       <Text>Date: {new Date(item.date).toLocaleDateString()}</Text>
+      <Button
+        title={item.hasPaid ? "Paid" : "Pay"}
+        onPress={() => handlePayment(item._id)}
+        disabled={item.hasPaid}
+      />
     </View>
   );
 
@@ -34,26 +76,19 @@ const MemberIntroScreen = ({ navigation }) => {
       <Text style={styles.header}>Welcome, Member!</Text>
       {isLoading ? (
         <ActivityIndicator size="large" />
-      ) : error ? (
-        <Text style={styles.error}>{error}</Text>
       ) : (
-        <FlatList
-          data={upcomingClasses}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => item._id ? item._id.toString() : index.toString()}
-        />
+        <>
+          <FlatList
+            data={classes}
+            renderItem={renderClass}
+            keyExtractor={(item, index) => item._id ? item._id.toString() : index.toString()}
+          />
+          <Button
+            title="Rest of Classes"
+            onPress={() => navigation.navigate('EnrollScreen')}
+          />
+        </>
       )}
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Enroll in a Class"
-          onPress={() => navigation.navigate('manageClassesMember')}
-        />
-        <Button
-          title="Pay for a Class"
-          onPress={() => navigation.navigate('AttendanceScreen')}
-        />
-        
-      </View>
     </View>
   );
 };
@@ -64,7 +99,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
   },
@@ -78,12 +113,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  buttonContainer: {
-    marginTop: 20,
-  },
-  error: {
-    color: 'red',
-  },
 });
 
-export default MemberIntroScreen;
+export default ClassesScreen;
