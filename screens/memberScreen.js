@@ -1,84 +1,89 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator } from 'react-native';
+import axios from 'axios';
+import uri from '../config/apiConfig'; // Make sure this points to your API's base URL
 
-const MemberScreen = ({ userId }) => {
-  const [classes, setClasses] = useState([]);
+const MemberIntroScreen = ({ navigation }) => {
+  const [upcomingClasses, setUpcomingClasses] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        const response = await axios.get("/api/classes"); // Fetch all classes
-        setClasses(response.data);
-      } catch (error) {
-        Alert.alert("Error", "Failed to fetch classes");
-      }
-    };
-
-    fetchClasses();
+    setIsLoading(true);
+    axios.get(`${uri}/classes`)
+      .then(response => {
+        setUpcomingClasses(response.data); // Directly set the fetched classes to state
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Failed to fetch classes:', error);
+        setError('Failed to fetch classes');
+        setIsLoading(false);
+      });
   }, []);
 
-  const handlePayment = async (classId) => {
-    // Implement payment logic here
-    Alert.alert("Payment", `Paid $10 for Class ID: ${classId}`);
-  };
-
-  const handleEnrollment = async (classId) => {
-    // Implement enrollment logic here
-    Alert.alert("Enrollment", `Enrolled in Class ID: ${classId}`);
-  };
-
-  const isUserEnrolled = (classItem) => {
-    return classItem.attendees.some((attendee) => attendee.user === userId);
-  };
+  const renderItem = ({ item }) => (
+    <View style={styles.classItem}>
+      <Text style={styles.classTitle}>{item.title}</Text>
+      <Text>Date: {new Date(item.date).toLocaleDateString()}</Text>
+    </View>
+  );
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text>Welcome, Member!</Text>
-      {classes.map((classItem) => (
-        <View key={classItem._id} style={styles.classBox}>
-          <Text>
-            {classItem.title} - {new Date(classItem.date).toLocaleDateString()}
-          </Text>
-          <Text>Coach: {classItem.coach.name}</Text>
-          {isUserEnrolled(classItem) ? (
-            <Button
-              title="Pay $10"
-              onPress={() => handlePayment(classItem._id)}
-            />
-          ) : (
-            <Button
-              title="Enroll"
-              onPress={() => handleEnrollment(classItem._id)}
-            />
-          )}
-        </View>
-      ))}
-    </ScrollView>
+    <View style={styles.container}>
+      <Text style={styles.header}>Welcome, Member!</Text>
+      {isLoading ? (
+        <ActivityIndicator size="large" />
+      ) : error ? (
+        <Text style={styles.error}>{error}</Text>
+      ) : (
+        <FlatList
+          data={upcomingClasses}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => item._id ? item._id.toString() : index.toString()}
+        />
+      )}
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Enroll in a Class"
+          onPress={() => navigation.navigate('manageClassesMember')}
+        />
+        <Button
+          title="Pay for a Class"
+          onPress={() => navigation.navigate('AttendanceScreen')}
+        />
+        
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    alignItems: "center",
+    flex: 1,
     padding: 20,
   },
-  classBox: {
-    margin: 10,
+  header: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  classItem: {
+    backgroundColor: '#f9f9f9',
     padding: 10,
-    borderWidth: 1,
-    borderColor: "#ddd",
+    marginBottom: 10,
     borderRadius: 5,
   },
-  // Additional styles as needed
+  classTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    marginTop: 20,
+  },
+  error: {
+    color: 'red',
+  },
 });
 
-export default MemberScreen;
+export default MemberIntroScreen;

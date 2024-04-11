@@ -30,15 +30,20 @@ function App() {
         <Stack.Screen name="coachScreen" component={CoachScreen} />
         <Stack.Screen name="treasurerScreen" component={TreasurerScreen} />
         <Stack.Screen name="attendanceScreen" component={AttendanceScreen} />
-        <Stack.Screen name="enrolScreen" component={EnrolScreen} />
         <Stack.Screen name="CreditStatement" component={CreditStatement} />
         <Stack.Screen name="CoachManagement" component={CoachManagement} />
         <Stack.Screen name="MemberManagement" component={MemberManagement} />
         <Stack.Screen
+          name="addUserClassScreen"
+          component={AddUserClassScreen}
+        />
+        <Stack.Screen name="enrolScreen" component={EnrolScreen} />
+        <Stack.Screen name="TreasurerScreen" component={TreasurerScreen} />
+        <Stack.Screen name="manageClassesCoach" component={ManageClassScreen} />
+        <Stack.Screen
           name="manageClassesMember"
           component={ManageEnrollScreen}
         />
-        <Stack.Screen name="manageClassesCoach" component={ManageClassScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
