@@ -23,15 +23,15 @@ router.get("/classes", async (req, res) => {
   }
 });
 
-router.get("/classes/:id", async (req, res) => {
+// Get classes for a specific member
+router.get('/classes/member/:memberId', async (req, res) => {
   try {
-    const classes = await Class.find({_id: req.params.id}).populate("coach attendees.user");
+    const classes = await Class.find({ 'attendees.user': req.params.memberId }).populate('coach attendees.user');
     res.json(classes);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 // Update a class
 router.put("/classes/:id", async (req, res) => {
