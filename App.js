@@ -11,6 +11,7 @@ import ManageEnrollScreen from './screens/manageEnrollScreen';
 import AttendanceScreen from './screens/attendanceScreen';
 import EnrolScreen from './screens/addClassScreen';
 import AddUserClassScreen from './screens/addUserstoClassScreen';
+import EnrollScreen from './screens/enrollScreen';
 
 const Stack = createStackNavigator();
 
@@ -31,6 +32,7 @@ function App() {
         <Stack.Screen name="TreasurerScreen" component={TreasurerScreen} />
         <Stack.Screen name="manageClassesCoach" component={ManageClassScreen} />
         <Stack.Screen name="manageClassesMember" component={ManageEnrollScreen} />
+        <Stack.Screen name="EnrollScreen" component={EnrollScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

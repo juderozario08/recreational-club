@@ -83,5 +83,72 @@ router.post('/classes/:id/users', async (req, res) => {
   }
 });
 
+// Endpoint to mark a user's payment for a class as complete
+router.post('/classes/:id/pay', async (req, res) => {
+  try {
+    const classId = req.params.id;
+    const userId = req.body.userId; // Assume userId is passed in the request body
+
+    const existingClass = await Class.findById(classId);
+    if (!existingClass) {
+      return res.status(404).json({ message: "Class not found." });
+    }
+
+    // Find the attendee in the class's attendees list
+    const attendeeIndex = existingClass.attendees.findIndex(attendee => attendee.user.toString() === userId);
+    if (attendeeIndex === -1) {
+      return res.status(404).json({ message: "User not found in class attendees." });
+    }
+
+    // Update the hasPaid status for the user
+    existingClass.attendees[attendeeIndex].hasPaid = true;
+    const updatedClass = await existingClass.save();
+
+    res.json(updatedClass);
+  } catch (error) {
+    console.error('Error processing payment for class:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+router.get('/user-classes/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    // Fetch all classes and populate user details in attendees
+    const allClasses = await Class.find().populate('attendees.user');
+    
+    // Filter classes to include only those that have the specified user as an attendee
+    const classesForUser = allClasses.filter(classItem =>
+      classItem.attendees.some(attendee => attendee.user._id.toString() === userId)
+    );
+
+    res.json(classesForUser);
+  } catch (error) {
+    console.error(`Error fetching classes for user ${userId}:`, error);
+    res.status(500).json({ message: 'Error fetching classes for user', error });
+  }
+});
+
+router.get('/!user-classes/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    // Fetch all classes and populate user details in attendees
+    const allClasses = await Class.find().populate('attendees.user');
+    
+    // Filter classes to include only those that dont have the specified user as an attendee
+    const classesForUser = allClasses.filter(classItem =>
+      !classItem.attendees.some(attendee => attendee.user._id.toString() === userId)
+    );
+
+    res.json(classesForUser);
+  } catch (error) {
+    console.error(`Error fetching classes for user ${userId}:`, error);
+    res.status(500).json({ message: 'Error fetching classes for user', error });
+  }
+});
+
 module.exports = router;
 
