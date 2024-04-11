@@ -12,8 +12,8 @@ import AddUserClassScreen from "./screens/addUserstoClassScreen";
 
 import TreasurerScreen from "./screens/Treasurer/TreasurerScreen";
 import CreditStatement from "./screens/Treasurer/CreditStatement";
-import CoachManagement from "./screens/Treasurer/CoachManagement";
-import MemberManagement from "./screens/Treasurer/MemberManagement";
+import CoachManagement from "./screens/Treasurer/ManageCoach/CoachManagement";
+import MemberManagement from "./screens/Treasurer/ManageMember/MemberManagement";
 
 const Stack = createStackNavigator();
 
@@ -24,13 +24,13 @@ function App() {
         initialRouteName="Login"
         screenOptions={{ headerShown: false }}
       >
-        {/* <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="memberScreen" component={MemberScreen} />
-        <Stack.Screen name="coachScreen" component={CoachScreen} /> */}
+        <Stack.Screen name="coachScreen" component={CoachScreen} />
         <Stack.Screen name="treasurerScreen" component={TreasurerScreen} />
-        {/* <Stack.Screen name="attendanceScreen" component={AttendanceScreen} /> */}
-        {/* <Stack.Screen name="enrolScreen" component={EnrolScreen} /> */}
+        <Stack.Screen name="attendanceScreen" component={AttendanceScreen} />
+        <Stack.Screen name="enrolScreen" component={EnrolScreen} />
         <Stack.Screen name="CreditStatement" component={CreditStatement} />
         <Stack.Screen name="CoachManagement" component={CoachManagement} />
         <Stack.Screen name="MemberManagement" component={MemberManagement} />
