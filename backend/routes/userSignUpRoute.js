@@ -37,6 +37,7 @@ router.post("/signUp", async (req, res) => {
     res.status(500).json({ message: "An error occurred during signup." });
   }
 });
+
 router.post("/signUp/coach", async (req, res) => {
   // Extract name, email, and password from request body
   const { name, email, password, address, phoneNumber, role } = req.body;

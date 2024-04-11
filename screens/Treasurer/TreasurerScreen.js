@@ -1,14 +1,48 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import uri from "../../config/apiConfig";
 
-const Drawer = createDrawerNavigator();
-
-const TreasurerScreen = ({ rootNavigation }) => {
+const TreasurerScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
+  const navElements = [
+    { name: "Profile", color: true },
+    { name: "Statement", color: false },
+    { name: "Coaches", color: false },
+    { name: "Members", color: false },
+  ];
+
+  const Navbar = ({ navigateTo }) => {
+    const onPressTab = (tabName) => {
+      if (tabName === "Profile") navigateTo("treasurerScreen");
+      else if (tabName === "Statement") navigateTo("CreditStatement");
+      else if (tabName === "Coaches") navigateTo("CoachManagement");
+      else if (tabName === "Members") navigateTo("MemberManagement");
+    };
+    return (
+      <View
+        style={[styles.navbar, { position: "absolute", bottom: 0, left: 0 }]}
+      >
+        {navElements.map((element, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.tab}
+            onPress={() => onPressTab(element.name)}
+          >
+            <Text
+              style={{
+                color: element.color ? "#007bff" : "#aaa",
+              }}
+            >
+              {element.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
 
   const fetchUserData = async () => {
     try {
@@ -40,6 +74,7 @@ const TreasurerScreen = ({ rootNavigation }) => {
           Loading user data...
         </Text>
       )}
+      <Navbar navigateTo={navigation.navigate} />
     </View>
   );
 };
@@ -48,29 +83,51 @@ export default TreasurerScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
   },
   profileView: {
-    width: "80%",
-    marginVertical: 10,
+    width: "90%",
+    marginVertical: 20,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#e3e3e3",
     padding: 20,
     borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   heading: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    color: "#333",
   },
   text: {
     fontSize: 18,
     textAlign: "center",
     marginBottom: 10,
     color: "#333",
+  },
+  navbar: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+    borderTopWidth: 1,
+    borderTopColor: "#ddd",
+    width: "100%",
+  },
+  tab: {
+    alignItems: "center",
+    paddingVertical: 10,
   },
 });
