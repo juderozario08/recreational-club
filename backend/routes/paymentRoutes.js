@@ -1,9 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Payment = require('../models/Payment');
+const Payment = require("../models/Payment");
 
 // POST route to record a new payment
-router.post('/payments', async (req, res) => {
+router.post("/payments", async (req, res) => {
   const payment = new Payment(req.body);
   try {
     await payment.save();
@@ -14,7 +14,7 @@ router.post('/payments', async (req, res) => {
 });
 
 // GET route to list all payments
-router.get('/payments', async (req, res) => {
+router.get("/payments", async (req, res) => {
   try {
     const payments = await Payment.find({});
     res.send(payments);
@@ -22,7 +22,5 @@ router.get('/payments', async (req, res) => {
     res.status(500).send();
   }
 });
-
-
 
 module.exports = router;
