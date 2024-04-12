@@ -9,7 +9,7 @@ import ManageEnrollScreen from "./screens/manageEnrollScreen";
 import AttendanceScreen from "./screens/attendanceScreen";
 import EnrolScreen from "./screens/addClassScreen";
 import AddUserClassScreen from "./screens/addUserstoClassScreen";
-import EnrollScreen from './screens/enrollScreen';
+import EnrollScreen from "./screens/enrollScreen";
 import TreasurerScreen from "./screens/Treasurer/TreasurerScreen";
 import CreditStatement from "./screens/Treasurer/CreditStatement";
 import CoachManagement from "./screens/Treasurer/ManageCoach/CoachManagement";
@@ -22,7 +22,12 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Login"
-        screenOptions={{ headerShown: false }}
+        screenOptions={{
+          headerShown: true,
+          headerTitle: "",
+          gestureEnabled: true,
+          gestureDirection: "horizontal",
+        }}
       >
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />

@@ -17,6 +17,7 @@ import uri from "../config/apiConfig"; // Make sure this points to your API's ba
 
 // Ensure this path is correct and points to your actual service file
 import * as ClassService from "../services/classService";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ManageClassesScreen = ({ navigation }) => {
   const [classes, setClasses] = useState([]);

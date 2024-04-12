@@ -35,7 +35,6 @@ const AddMember = ({ navigation }) => {
         "Sign Up Successful",
         "Your member account has been created."
       );
-      console.log("Member Added");
       navigation.navigate("MainScreen");
     } catch (error) {
       console.error(error);
