@@ -8,11 +8,11 @@ const Stack = createStackNavigator();
 const CoachManagement = ({ navigation }) => {
   return (
     <Stack.Navigator
-      initialRouteName="MainScreen"
+      initialRouteName="Login"
       screenOptions={{
-        headerShown: true,
-        headerTitleAlign: "center",
-        headerTitle: null,
+        headerShown: false,
+        gestureEnabled: true,
+        gestureDirection: "horizontal",
       }}
     >
       <Stack.Screen name="MainScreen" component={MainScreen} />

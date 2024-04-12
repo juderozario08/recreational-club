@@ -1,21 +1,22 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useFocusEffect } from "@react-navigation/native";
 import {
-  Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   View,
-  TextInput,
-  Button,
-  Alert,
-  TouchableOpacity,
+  Pressable,
+  Modal,
+  StyleSheet,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import uri from "../../../config/apiConfig";
 
 const MainScreen = ({ navigation }) => {
   const [coachList, setCoachList] = useState([]);
+  const [manageClassModal, setManageClassModal] = useState(false);
+  const [selectedCoach, setSelectedCoach] = useState(null);
+  const [classList, setClassList] = useState([]);
+
   const fetchCoaches = async () => {
     try {
       const response = await axios.get(`${uri}/users/coaches`);
@@ -28,15 +29,32 @@ const MainScreen = ({ navigation }) => {
       console.error("Error fetching coaches: ", error.message);
     }
   };
+
+  const fetchClass = async () => {
+    try {
+      const response = await axios.get(`${uri}/classes`);
+      setClassList(response.data);
+    } catch (error) {
+      console.error("Error fetching classes: ", error.message);
+    }
+  };
+
+  const handleCoachClassPress = (coach) => {
+    console.log("Coach Class Pressed");
+    setManageClassModal(true);
+    const coachClasses = classList.filter(
+      (classItem) => classItem.coach._id === coach._id
+    );
+    setSelectedCoach({ ...coach, classes: coachClasses });
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       fetchCoaches();
+      fetchClass();
     }, [])
   );
 
-  const handleCoachPress = (coach) => {
-    console.log("Coach Pressed");
-  };
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -44,13 +62,60 @@ const MainScreen = ({ navigation }) => {
     >
       <Text style={styles.heading}>Coach Management</Text>
       {coachList.map((coach, index) => (
-        <View key={index} style={styles.coachContainer}>
-          <Pressable onPress={() => handleCoachPress(coach)}>
-            <Text style={styles.text}>{coach.name}</Text>
+        <View
+          key={index}
+          style={[styles.coachContainer, { justifyContent: "space-between" }]}
+        >
+          <Text style={styles.text}>{coach.name}</Text>
+          <Pressable
+            style={{
+              alignSelf: "center",
+              backgroundColor: "#007bff",
+              padding: 5,
+              paddingHorizontal: 10,
+              borderRadius: 5,
+            }}
+            onPress={() => handleCoachClassPress(coach)}
+          >
+            <Text style={{ color: "#FFFFFF" }}>Classes</Text>
           </Pressable>
-          <View style={styles.classesContainer}></View>
         </View>
       ))}
+      {selectedCoach && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={manageClassModal}
+          onRequestClose={() => setManageClassModal(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={[styles.modalContent, { gap: 5 }]}>
+              <Text style={styles.modalTitle}>Classes</Text>
+              <Text style={{ textAlign: "center", padding: 10, fontSize: 16 }}>
+                Number of Classes: {selectedCoach.classes.length}
+              </Text>
+              {selectedCoach.classes.map((classItem, index) => (
+                <View key={index} style={styles.modalText}>
+                  <Text style={{ textAlign: "center" }}>{classItem.title}</Text>
+                </View>
+              ))}
+              <Pressable
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed ? "#0056b3" : "#007bff",
+                    padding: 10,
+                    marginTop: 5,
+                    borderRadius: 5,
+                  },
+                ]}
+                onPress={() => setManageClassModal(false)}
+              >
+                <Text style={{ color: "white" }}>Close</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      )}
       <Pressable
         style={({ pressed }) => [
           {
@@ -97,7 +162,7 @@ const Navbar = ({ navigateTo }) => {
   return (
     <View style={[styles.navbar, { position: "fixed", bottom: 0, left: 0 }]}>
       {navElements.map((element, index) => (
-        <TouchableOpacity
+        <Pressable
           key={index}
           style={styles.tab}
           onPress={() => onPressTab(element.name)}
@@ -109,7 +174,7 @@ const Navbar = ({ navigateTo }) => {
           >
             {element.name}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       ))}
     </View>
   );
@@ -132,8 +197,10 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     color: "#333",
+    alignSelf: "center",
   },
   coachContainer: {
+    flexDirection: "row",
     marginBottom: 20,
     padding: 15,
     backgroundColor: "#f0f0f0",
@@ -186,5 +253,26 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 20,
+    width: "80%",
+    alignItems: "center",
+  },
+  modalTitle: {
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  modalText: {
+    textAlign: "center",
   },
 });
