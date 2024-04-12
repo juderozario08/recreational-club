@@ -29,10 +29,10 @@ function App() {
           gestureDirection: "horizontal",
         }}
       >
-        {/* <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="memberScreen" component={MemberScreen} />
-        <Stack.Screen name="coachScreen" component={CoachScreen} /> */}
+        <Stack.Screen name="coachScreen" component={CoachScreen} />
         <Stack.Screen name="treasurerScreen" component={TreasurerScreen} />
         <Stack.Screen name="attendanceScreen" component={AttendanceScreen} />
         <Stack.Screen name="CreditStatement" component={CreditStatement} />
