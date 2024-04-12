@@ -57,7 +57,6 @@ router.post("/signUp/coach", async (req, res) => {
       phoneNumber,
       role,
     });
-    console.log(user);
     // Save the new user to the database
     await user.save();
     // Respond with the created user (excluding the password for security)

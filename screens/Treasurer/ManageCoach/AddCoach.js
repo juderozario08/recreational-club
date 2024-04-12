@@ -24,7 +24,6 @@ const AddCoach = ({ navigation }) => {
     try {
       const response = await axios.post(`${uri}/signUp/coach`, userInfo);
       Alert.alert("Sign Up Successful", "Your coach account has been created.");
-      console.log("Coach Added");
       navigation.navigate("MainScreen");
     } catch (error) {
       console.error(error);

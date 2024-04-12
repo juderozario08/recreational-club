@@ -1,10 +1,10 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User'); // Adjust the path to where your User model is located
+const express = require("express");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User"); // Adjust the path to where your User model is located
 const router = express.Router();
 
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   // Destructure email and password from request body
   const { email, password } = req.body;
 
@@ -23,10 +23,10 @@ router.post('/login', async (req, res) => {
 
     // User is authenticated, generate a token
     const token = jwt.sign(
-        { userId: user._id, role: user.role }, // Include the user role in the payload
-        process.env.TOKEN_SECRET,
-        { expiresIn: '1h' }
-      );
+      { userId: user._id, role: user.role }, // Include the user role in the payload
+      process.env.TOKEN_SECRET,
+      { expiresIn: "1h" }
+    );
 
     // Respond with token (and user data as needed)
     res.json({ token, userId: user._id, role: user.role });

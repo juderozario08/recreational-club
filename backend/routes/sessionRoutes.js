@@ -1,9 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Session = require('../models/Class');
+const Session = require("../models/Class");
 
 // POST route to create a new session
-router.post('/sessions', async (req, res) => {
+router.post("/sessions", async (req, res) => {
   const session = new Session(req.body);
   try {
     await session.save();
@@ -14,7 +14,7 @@ router.post('/sessions', async (req, res) => {
 });
 
 // GET route to fetch all sessions
-router.get('/sessions', async (req, res) => {
+router.get("/sessions", async (req, res) => {
   try {
     const sessions = await Session.find({});
     res.send(sessions);
@@ -23,19 +23,17 @@ router.get('/sessions', async (req, res) => {
   }
 });
 
-// Delete route to delete a session 
-router.delete('/sessions/:id', async (req, res) => {
-    try {
-      const session = await Session.findByIdAndDelete(req.params.id);
-  
-      if (!session) {
-        return res.status(404).send('Session not found.');
-      }
-  
-      res.send(session);
-    } catch (error) {
-      res.status(500).send(error);
+// Delete route to delete a session
+router.delete("/sessions/:id", async (req, res) => {
+  try {
+    const session = await Session.findByIdAndDelete(req.params.id);
+    if (!session) {
+      return res.status(404).send("Session not found.");
     }
-  });
+    res.send(session);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 module.exports = router;
