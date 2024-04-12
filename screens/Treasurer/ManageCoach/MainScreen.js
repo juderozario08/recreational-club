@@ -24,7 +24,6 @@ const MainScreen = ({ navigation }) => {
         classes: [],
       }));
       setCoachList(coachesData);
-      console.log("Coaches Loaded");
     } catch (error) {
       console.error("Error fetching coaches: ", error.message);
     }

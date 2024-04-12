@@ -129,7 +129,6 @@ const SearchCoach = ({ navigation }) => {
       const response = await axios.get(`${uri}/users/coaches`);
       setCoachList(response.data);
       setFilteredUsers(response.data);
-      console.log("Coaches Loaded");
     } catch (error) {
       console.error("Error fetching coaches: ", error.message);
     }
@@ -149,7 +148,6 @@ const SearchCoach = ({ navigation }) => {
     await axios
       .delete(`${uri}/users/${id}`)
       .then(() => {
-        console.log("Coach Deleted");
         fetchCoaches();
         setFilteredUsers(coachList);
         setSearchQuery("");

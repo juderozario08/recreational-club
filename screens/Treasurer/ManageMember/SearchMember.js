@@ -28,7 +28,6 @@ const UpdateMemberModal = ({ member, modalVisible, setModalVisible }) => {
     await axios
       .put(`${uri}/users/${member._id}`, updatedMember)
       .then(() => {
-        console.log("Member Updated");
         setModalVisible(!modalVisible);
       })
       .catch((error) => {
@@ -129,7 +128,6 @@ const SearchMember = ({ navigation }) => {
       const response = await axios.get(`${uri}/users/members`);
       setMemberList(response.data);
       setFilteredUsers(response.data);
-      console.log("member Loaded");
     } catch (error) {
       console.error("Error fetching members: ", error.message);
     }
@@ -149,7 +147,6 @@ const SearchMember = ({ navigation }) => {
     await axios
       .delete(`${uri}/users/${id}`)
       .then(() => {
-        console.log("Member Deleted");
         fetchMembers();
         setFilteredUsers(memberList);
         setSearchQuery("");

@@ -20,7 +20,6 @@ const MainScreen = ({ navigation }) => {
     try {
       const response = await axios.get(`${uri}/users/members`);
       setMemberList(response.data);
-      console.log("Members Loaded");
     } catch (e) {
       console.error("Error fetching members: ", e.message);
     }
