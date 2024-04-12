@@ -8,8 +8,12 @@ const Stack = createStackNavigator();
 const MemberManagement = ({ navigation }) => {
   return (
     <Stack.Navigator
-      initialRouteName="MainScreen"
-      screenOptions={{ headerShown: true }}
+      initialRouteName="Login"
+      screenOptions={{
+        headerShown: false,
+        gestureEnabled: true,
+        gestureDirection: "horizontal",
+      }}
     >
       <Stack.Screen name="MainScreen" component={MainScreen} />
       <Stack.Screen name="AddMember" component={AddMember} />
