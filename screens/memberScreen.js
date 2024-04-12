@@ -1,4 +1,6 @@
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import uri from "../config/apiConfig";
 import React, { useEffect, useState } from "react";
 import {
   Alert,
@@ -15,15 +17,16 @@ const MemberScreen = ({ userId }) => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await axios.get("/api/classes"); // Fetch all classes
+        const userId = await AsyncStorage.getItem("userId");
+        const response = await axios.get(`${uri}/user-classes/${userId}`);
         setClasses(response.data);
       } catch (error) {
-        Alert.alert("Error", "Failed to fetch classes");
+        Alert.alert("Error", "Failed to fetch classes for user");
       }
     };
 
     fetchClasses();
-  }, []);
+  }, [userId]); // Added userId as a dependency to refetch if it changes
 
   const handlePayment = async (classId) => {
     // Implement payment logic here

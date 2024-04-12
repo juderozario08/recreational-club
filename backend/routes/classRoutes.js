@@ -102,5 +102,36 @@ router.get('/user-classes/:userId', async (req, res) => {
   }
 });
 
+router.put('/classes/:id/users', async (req, res) => {
+  try {
+    const classId = req.params.id;
+    const userId = req.body.userId;
+
+    // Find the class by ID
+    const existingClass = await Class.findById(classId);
+    if (!existingClass) {
+      return res.status(404).json({ message: "Class not found." });
+    }
+
+    // Check if the user is actually an attendee of the class
+    const isUserAnAttendee = existingClass.attendees.some(attendee => attendee.user.toString() === userId);
+    if (!isUserAnAttendee) {
+      return res.status(404).json({ message: "User is not an attendee of the class." });
+    }
+
+    classToUpdate.attendees = classToUpdate.attendees.filter(attendee => attendee.user.toString() !== userId);
+    
+    // Save the updated class
+    const updatedClass = await classToUpdate.save();
+
+    res.json(updatedClass);
+
+    
+  } catch (error) {
+    console.error('Error removing user from class:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;
 

@@ -17,6 +17,7 @@ import uri from "../config/apiConfig"; // Make sure this points to your API's ba
 
 // Ensure this path is correct and points to your actual service file
 import * as ClassService from "../services/classService";
+import { useNavigation } from '@react-navigation/native';
 
 const ManageClassesScreen = ({ navigation }) => {
   const [classes, setClasses] = useState([]);
@@ -28,21 +29,22 @@ const ManageClassesScreen = ({ navigation }) => {
   const [editingClassId, setEditingClassId] = useState(null);
 
   useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        // Replace this axios call with your ClassService method if available
-        const response = await axios.get(`${uri}/classes`);
-        setClasses(response.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch classes:", error);
-        setError("Failed to fetch classes");
-        setIsLoading(false);
-      }
-    };
 
     fetchClasses();
   }, []);
+
+  const fetchClasses = async () => {
+    try {
+      // Replace this axios call with your ClassService method if available
+      const response = await axios.get(`${uri}/classes`);
+      setClasses(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch classes:", error);
+      setError("Failed to fetch classes");
+      setIsLoading(false);
+    }
+  };
 
   const handleCreateOrUpdate = async () => {
     try {
@@ -84,6 +86,7 @@ const ManageClassesScreen = ({ navigation }) => {
       await ClassService.deleteClass(classId);
       const updatedClasses = classes.filter((cls) => cls._id !== classId);
       setClasses(updatedClasses);
+      fetchClasses()
     } catch (error) {
       console.error("Failed to delete class:", error);
       // Optionally, update your state to show an error message to the user
@@ -102,6 +105,7 @@ const ManageClassesScreen = ({ navigation }) => {
     setIsEditing(false);
     setEditingClassId(null);
     setModalVisible(false);
+    fetchClasses();
   };
 
   const renderItem = ({ item }) => (
@@ -150,9 +154,10 @@ const ManageClassesScreen = ({ navigation }) => {
         ) : (
           <FlatList
             data={classes}
-            eeyExtractor={(item, index) =>
-              item._id ? item._id.toString() : index.toString()
+            keyExtractor={(item, index) => item._id ? item._id.toString() : index.toString()
+        
             }
+            renderItem={renderItem}
           />
         )}
         <Button title="Add New Class" onPress={() => setModalVisible(true)} />
@@ -196,6 +201,11 @@ const ManageClassesScreen = ({ navigation }) => {
           </View>
         </Modal>
       </ScrollView>
+      <Button
+        title="Go Back"
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      />
     </View>
   );
 };

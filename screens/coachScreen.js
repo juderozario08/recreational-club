@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonStyle: {
+    backgroundColor: 'blue',
     height: 50,
     borderColor: 'gray',
     borderWidth: 1,
@@ -92,6 +93,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white', // Example text color
+    textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold',
   },

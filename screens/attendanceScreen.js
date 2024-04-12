@@ -1,10 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import uri from '../config/apiConfig';
 
 const AttendanceScreen = () => {
     const [classes, setClasses] = useState([]);
+    
+    const navigation = useNavigation();
+    useEffect(() => {
+      navigation.setOptions({
+        headerTitle: 'Attendance Screen',
+        headerLeft: () => (
+          <Button
+            onPress={() => navigation.goBack()}
+            title="Back"
+            color="#000" // Set to your desired color
+          />
+        ),
+      });
+  
+      fetchClasses();
+    }, [navigation]);
 
     useEffect(() => {
       fetchClasses();
